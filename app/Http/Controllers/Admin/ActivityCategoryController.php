@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ActivityCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Helpers\ActivityLogger;
 
 class ActivityCategoryController extends Controller
 {
@@ -23,7 +25,14 @@ class ActivityCategoryController extends Controller
             'description' => 'nullable|string|max:100',
             'is_active'   => 'required|boolean',
         ]);
-        ActivityCategory::create($validated);
+        $category = ActivityCategory::create($validated);
+
+        // Logging
+        ActivityLogger::log(
+            'create',
+            'activity_category',
+            'Tambah kategori: ' . $category->name . ' oleh user: ' . Auth::user()->name
+        );
 
         return redirect()->route('admin.activity-categories.index')->with('success', 'Kategori berhasil ditambah.');
     }
@@ -38,13 +47,29 @@ class ActivityCategoryController extends Controller
         ]);
         $activity_category->update($validated);
 
+        // Logging
+        ActivityLogger::log(
+            'update',
+            'activity_category',
+            'Update kategori: ' . $activity_category->name . ' oleh user: ' . Auth::user()->name
+        );
+
         return redirect()->route('admin.activity-categories.index')->with('success', 'Kategori berhasil diupdate.');
     }
 
     // Hapus kategori
     public function destroy(ActivityCategory $activity_category)
     {
+        $categoryName = $activity_category->name;
         $activity_category->delete();
+
+        // Logging
+        ActivityLogger::log(
+            'delete',
+            'activity_category',
+            'Hapus kategori: ' . $categoryName . ' oleh user: ' . Auth::user()->name
+        );
+
         return redirect()->route('admin.activity-categories.index')->with('success', 'Kategori berhasil dihapus.');
     }
 }

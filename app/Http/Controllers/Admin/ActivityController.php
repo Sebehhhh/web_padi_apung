@@ -7,13 +7,14 @@ use App\Models\Activity;
 use App\Models\ActivityCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\ActivityLogger;
 
 class ActivityController extends Controller
 {
     // Tampilkan semua kegiatan
     public function index()
     {
-        $activities = Activity::with(['category','photos'])->orderByDesc('activity_date')->paginate(10);
+        $activities = Activity::with(['category', 'photos'])->orderByDesc('activity_date')->paginate(10);
         $categories = ActivityCategory::where('is_active', 1)->orderBy('name')->get();
         return view('admin.activities.index', compact('activities', 'categories'));
     }
@@ -32,7 +33,15 @@ class ActivityController extends Controller
         ]);
         $validated['created_by'] = Auth::id();
 
-        Activity::create($validated);
+        $activity = Activity::create($validated);
+
+        // Logging
+        ActivityLogger::log(
+            'create',
+            'activity',
+            'Tambah kegiatan: ' . $activity->description . ' oleh user: ' . Auth::user()->name
+        );
+
         return redirect()->route('admin.activities.index')->with('success', 'Kegiatan berhasil ditambah.');
     }
 
@@ -49,13 +58,30 @@ class ActivityController extends Controller
             'status'         => 'required|in:Draft,Pending,Selesai,Dibatalkan',
         ]);
         $activity->update($validated);
+
+        // Logging
+        ActivityLogger::log(
+            'update',
+            'activity',
+            'Update kegiatan: ' . $activity->description . ' oleh user: ' . Auth::user()->name
+        );
+
         return redirect()->route('admin.activities.index')->with('success', 'Kegiatan berhasil diupdate.');
     }
 
     // Hapus kegiatan
     public function destroy(Activity $activity)
     {
+        $desc = $activity->description;
         $activity->delete();
+
+        // Logging
+        ActivityLogger::log(
+            'delete',
+            'activity',
+            'Hapus kegiatan: ' . $desc . ' oleh user: ' . Auth::user()->name
+        );
+
         return redirect()->route('admin.activities.index')->with('success', 'Kegiatan berhasil dihapus.');
     }
 }

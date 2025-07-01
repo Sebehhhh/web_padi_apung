@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\CropType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Helpers\ActivityLogger;
 
 class CropTypeController extends Controller
 {
@@ -23,7 +25,14 @@ class CropTypeController extends Controller
             'description' => 'nullable|string|max:100',
             'is_active'   => 'required|boolean',
         ]);
-        CropType::create($validated);
+        $crop = CropType::create($validated);
+
+        // Logging
+        ActivityLogger::log(
+            'create',
+            'crop_type',
+            'Tambah jenis tanaman: ' . $crop->name . ' oleh user: ' . Auth::user()->name
+        );
 
         return redirect()->route('admin.crop-types.index')->with('success', 'Jenis tanaman berhasil ditambah.');
     }
@@ -38,13 +47,29 @@ class CropTypeController extends Controller
         ]);
         $crop_type->update($validated);
 
+        // Logging
+        ActivityLogger::log(
+            'update',
+            'crop_type',
+            'Update jenis tanaman: ' . $crop_type->name . ' oleh user: ' . Auth::user()->name
+        );
+
         return redirect()->route('admin.crop-types.index')->with('success', 'Jenis tanaman berhasil diupdate.');
     }
 
     // Hapus jenis tanaman
     public function destroy(CropType $crop_type)
     {
+        $name = $crop_type->name;
         $crop_type->delete();
+
+        // Logging
+        ActivityLogger::log(
+            'delete',
+            'crop_type',
+            'Hapus jenis tanaman: ' . $name . ' oleh user: ' . Auth::user()->name
+        );
+
         return redirect()->route('admin.crop-types.index')->with('success', 'Jenis tanaman berhasil dihapus.');
     }
 }

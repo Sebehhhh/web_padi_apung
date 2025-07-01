@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -35,9 +36,14 @@ class UserController extends Controller
 
         $validated['password'] = Hash::make($validated['password']);
 
-        User::create($validated);
-        // Optional: log activity jika masih dipakai
-        ActivityLogger::log('create', 'user', 'Tambah user: ' . $request->name);
+        $user = User::create($validated);
+
+        // Logging activity: siapa yang create siapa
+        ActivityLogger::log(
+            'create',
+            'user',
+            'Tambah user: ' . $user->name . ' (ID: ' . $user->id . ') oleh: ' . Auth::user()->name
+        );
 
         return redirect()->route('admin.users.index')->with('success', 'User berhasil ditambah.');
     }
@@ -65,8 +71,12 @@ class UserController extends Controller
         }
 
         $user->update($validated);
-        // Optional: log activity jika masih dipakai
-        ActivityLogger::log('update', 'user', 'Update user: ' . $user->name);
+
+        ActivityLogger::log(
+            'update',
+            'user',
+            'Update user: ' . $user->name . ' (ID: ' . $user->id . ') oleh: ' . Auth::user()->name
+        );
 
         return redirect()->route('admin.users.index')->with('success', 'User berhasil diupdate.');
     }
@@ -75,9 +85,15 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $userName = $user->name;
+        $userId = $user->id;
         $user->delete();
-        // Optional: log activity jika masih dipakai
-        ActivityLogger::log('delete', 'user', 'Hapus user: ' . $userName);
+
+        ActivityLogger::log(
+            'delete',
+            'user',
+            'Hapus user: ' . $userName . ' (ID: ' . $userId . ') oleh: ' . Auth::user()->name
+        );
+
         return redirect()->route('admin.users.index')->with('success', 'User berhasil dihapus.');
     }
 }

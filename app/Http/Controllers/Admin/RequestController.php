@@ -8,6 +8,7 @@ use App\Models\RequestItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\ActivityLogger;
 
 class RequestController extends Controller
 {
@@ -49,6 +50,9 @@ class RequestController extends Controller
                 ]);
             }
 
+            // Logging
+            ActivityLogger::log('create', 'request', 'Buat permintaan baru ID: ' . $req->id . ', oleh: ' . Auth::user()->name);
+
             DB::commit();
             return redirect()->route('admin.requests.index')->with('success', 'Permintaan berhasil ditambahkan.');
         } catch (\Exception $e) {
@@ -66,11 +70,14 @@ class RequestController extends Controller
             return back()->with('error', 'Status permintaan sudah tidak bisa diubah.');
         }
 
-        $req->status         = 'Approved';
-        $req->approved_by    = Auth::id();
-        $req->approved_at    = now();
+        $req->status          = 'Approved';
+        $req->approved_by     = Auth::id();
+        $req->approved_at     = now();
         $req->rejected_reason = null;
         $req->save();
+
+        // Logging
+        ActivityLogger::log('approve', 'request', 'Approve permintaan ID: ' . $req->id . ', oleh: ' . Auth::user()->name);
 
         return back()->with('success', 'Permintaan berhasil di-approve.');
     }
@@ -94,6 +101,9 @@ class RequestController extends Controller
         $req->rejected_reason = $request->rejected_reason;
         $req->save();
 
+        // Logging
+        ActivityLogger::log('reject', 'request', 'Reject permintaan ID: ' . $req->id . ' (alasan: ' . $request->rejected_reason . '), oleh: ' . Auth::user()->name);
+
         return back()->with('success', 'Permintaan berhasil direject.');
     }
 
@@ -104,8 +114,12 @@ class RequestController extends Controller
 
         DB::beginTransaction();
         try {
-            $req->items()->delete();
+            $deletedItems = $req->items()->delete();
             $req->delete();
+
+            // Logging
+            ActivityLogger::log('delete', 'request', 'Hapus permintaan ID: ' . $req->id . ', oleh: ' . Auth::user()->name);
+
             DB::commit();
             return back()->with('success', 'Permintaan berhasil dihapus.');
         } catch (\Exception $e) {

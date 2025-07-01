@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\ActivityPhoto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+use App\Helpers\ActivityLogger;
 
 class ActivityPhotoController extends Controller
 {
@@ -28,12 +30,19 @@ class ActivityPhotoController extends Controller
         $file = $request->file('photo');
         $path = $file->store('activity_photos', 'public');
 
-        ActivityPhoto::create([
+        $photo = ActivityPhoto::create([
             'activity_id' => $request->activity_id,
             'photo_url'   => $path,
             'caption'     => $request->caption,
             'taken_at'    => $request->taken_at,
         ]);
+
+        // Logging
+        ActivityLogger::log(
+            'create',
+            'activity_photo',
+            'Upload foto dokumentasi kegiatan ID: ' . $request->activity_id . ' oleh user: ' . Auth::user()->name
+        );
 
         return back()->with('success', 'Foto dokumentasi berhasil diupload.');
     }
@@ -41,10 +50,20 @@ class ActivityPhotoController extends Controller
     // Destroy: hapus foto
     public function destroy(ActivityPhoto $activity_photo)
     {
+        $desc = $activity_photo->caption ?? $activity_photo->photo_url;
+
         if ($activity_photo->photo_url && Storage::disk('public')->exists($activity_photo->photo_url)) {
             Storage::disk('public')->delete($activity_photo->photo_url);
         }
         $activity_photo->delete();
+
+        // Logging
+        ActivityLogger::log(
+            'delete',
+            'activity_photo',
+            'Hapus foto dokumentasi (ID: ' . $activity_photo->id . ', Caption: ' . $desc . ') oleh user: ' . Auth::user()->name
+        );
+
         return back()->with('success', 'Foto dokumentasi berhasil dihapus.');
     }
 }
