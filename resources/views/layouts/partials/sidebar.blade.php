@@ -36,9 +36,27 @@
           </a>
         </li>
         <li class="sidebar-item">
+          <a class="sidebar-link" href="{{ route('admin.crop-types.index') }}" aria-expanded="false">
+            <i class="ti ti-leaf"></i>
+            <span class="hide-menu">Jenis Tanaman</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
           <a class="sidebar-link" href="{{ route('admin.logs.index') }}" aria-expanded="false">
             <i class="ti ti-list-details"></i>
             <span class="hide-menu">Riwayat Aktivitas</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{{ route('admin.activities.index') }}" aria-expanded="false">
+            <i class="ti ti-calendar-event"></i>
+            <span class="hide-menu">Kegiatan</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{{ route('admin.requests.index') }}" aria-expanded="false">
+            <i class="ti ti-shopping-cart"></i>
+            <span class="hide-menu">Permintaan Barang/Bahan</span>
           </a>
         </li>
         @endif
