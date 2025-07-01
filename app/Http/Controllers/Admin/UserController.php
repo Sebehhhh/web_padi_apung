@@ -17,61 +17,57 @@ class UserController extends Controller
         return view('admin.users.index', compact('users'));
     }
 
-    // Show form tambah user
-    public function create()
-    {
-        return view('admin.users.create');
-    }
-
     // Simpan user baru
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name'     => 'required|string|max:255',
-            'username' => 'required|string|max:50|unique:users',
-            'email'    => 'required|email|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-            'role'     => 'required|in:admin,kepala,pegawai',
-            'status'   => 'required|in:active,inactive',
+            'nip_nik'   => 'required|string|max:30|unique:users,nip_nik',
+            'name'      => 'required|string|max:100',
+            'email'     => 'required|email|max:100|unique:users,email',
+            'position'  => 'nullable|string|max:50',
+            'division'  => 'nullable|string|max:50',
+            'address'   => 'nullable|string|max:200',
+            'role'      => 'required|in:admin,kepala,pegawai',
+            'photo_url' => 'nullable|string|max:255',
+            'is_active' => 'required|boolean',
+            'password'  => 'required|string|min:6|confirmed',
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
 
         User::create($validated);
+        // Optional: log activity jika masih dipakai
         ActivityLogger::log('create', 'user', 'Tambah user: ' . $request->name);
 
         return redirect()->route('admin.users.index')->with('success', 'User berhasil ditambah.');
-    }
-
-    // Show detail user
-    public function show(User $user)
-    {
-        return view('admin.users.show', compact('user'));
-    }
-
-    // Show form edit user
-    public function edit(User $user)
-    {
-        return view('admin.users.edit', compact('user'));
     }
 
     // Update user
     public function update(Request $request, User $user)
     {
         $validated = $request->validate([
-            'name'     => 'required|string|max:255',
-            'username' => 'required|string|max:50|unique:users,username,' . $user->id,
-            'email'    => 'required|email|unique:users,email,' . $user->id,
-            'role'     => 'required|in:admin,kepala,pegawai',
-            'status'   => 'required|in:active,inactive',
+            'nip_nik'   => 'required|string|max:30|unique:users,nip_nik,' . $user->id,
+            'name'      => 'required|string|max:100',
+            'email'     => 'required|email|max:100|unique:users,email,' . $user->id,
+            'position'  => 'nullable|string|max:50',
+            'division'  => 'nullable|string|max:50',
+            'address'   => 'nullable|string|max:200',
+            'role'      => 'required|in:admin,kepala,pegawai',
+            'photo_url' => 'nullable|string|max:255',
+            'is_active' => 'required|boolean',
+            'password'  => 'nullable|string|min:6|confirmed',
         ]);
 
         if ($request->filled('password')) {
             $validated['password'] = Hash::make($request->password);
+        } else {
+            unset($validated['password']);
         }
 
         $user->update($validated);
+        // Optional: log activity jika masih dipakai
         ActivityLogger::log('update', 'user', 'Update user: ' . $user->name);
+
         return redirect()->route('admin.users.index')->with('success', 'User berhasil diupdate.');
     }
 
@@ -80,6 +76,7 @@ class UserController extends Controller
     {
         $userName = $user->name;
         $user->delete();
+        // Optional: log activity jika masih dipakai
         ActivityLogger::log('delete', 'user', 'Hapus user: ' . $userName);
         return redirect()->route('admin.users.index')->with('success', 'User berhasil dihapus.');
     }

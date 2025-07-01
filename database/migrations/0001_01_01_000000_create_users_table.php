@@ -13,15 +13,18 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('username')->unique();
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->enum('role', ['admin', 'kepala', 'pegawai']);
-            $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->timestamps();
+            $table->string('nip_nik', 30)->unique();
+            $table->string('name', 100);
+            $table->string('position', 50)->nullable();
+            $table->string('division', 50)->nullable();
+            $table->string('address', 200)->nullable();
+            $table->enum('role', ['admin', 'kepala', 'pegawai'])->default('pegawai');
+            $table->string('photo_url', 255)->nullable();
+            $table->string('email', 100)->unique();
+            $table->string('password'); // hash password
+            $table->boolean('is_active')->default(true);
+            $table->timestamps(); // created_at, updated_at
         });
-
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();

@@ -10,42 +10,40 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    // Mass assignable attributes
     protected $fillable = [
+        'nip_nik',
         'name',
-        'username',
+        'position',
+        'division',
+        'address',
+        'role',
+        'photo_url',
         'email',
         'password',
-        'role',
-        'status',
+        'is_active',
     ];
 
-    // Attributes to hide
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    // Type casting
     protected $casts = [
+        'is_active' => 'boolean',
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
 
-    /**
-     * Relasi ke tabel employees (jika user punya satu data pegawai)
-     */
-    // public function employee()
+    // Contoh relasi ke activity (bisa dikembangkan sesuai kebutuhan)
+    // public function activities()
     // {
-    //     return $this->hasOne(Employee::class);
+    //     return $this->hasMany(Activity::class, 'created_by');
     // }
 
-    /**
-     * Relasi ke activity logs
-     */
-    // public function activityLogs()
+    // public function approvedActivities()
     // {
-    //     return $this->hasMany(ActivityLog::class);
+    //     return $this->hasMany(Activity::class, 'approved_by');
     // }
 
+    // ...tambahkan relasi lain sesuai kebutuhan modul lain
 }

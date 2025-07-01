@@ -13,16 +13,17 @@ return new class extends Migration
     {
         Schema::create('schedules', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('employee_id')->constrained()->onDelete('cascade');
-            $table->string('task_name');
+            $table->foreignId('user_id')->constrained('users')->cascadeOnUpdate()->restrictOnDelete();
+            $table->string('task_name', 100);
+            $table->date('schedule_date');
+            $table->time('start_time')->nullable();
+            $table->time('end_time')->nullable();
             $table->text('description')->nullable();
-            $table->date('date');
-            $table->time('time');
-            $table->enum('status', ['pending', 'selesai'])->default('pending');
-            $table->enum('priority', ['low', 'medium', 'high'])->default('medium');
+            $table->enum('status', ['Pending', 'Selesai', 'Dibatalkan'])->default('Pending');
+            $table->enum('priority', ['Rendah', 'Sedang', 'Tinggi'])->default('Sedang');
+            $table->foreignId('created_by')->constrained('users')->cascadeOnUpdate()->restrictOnDelete();
             $table->timestamps();
         });
-
     }
 
     /**
