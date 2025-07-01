@@ -59,6 +59,12 @@
             <span class="hide-menu">Permintaan Barang/Bahan</span>
           </a>
         </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{{ route('admin.harvests.index') }}" aria-expanded="false">
+            <i class="ti ti-harvest"></i>
+            <span class="hide-menu">Pencatatan Panen</span>
+          </a>
+        </li>
         @endif
 
       </ul>

@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ActivityCategoryController;
 use App\Http\Controllers\Admin\CropTypeController;
 use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\ActivityPhotoController as AdminActivityPhotoController;
+use App\Http\Controllers\Admin\HarvestController;
 use App\Http\Controllers\Admin\RequestController;
 // ...tambahkan Controller untuk role lain nanti
 
@@ -31,6 +32,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('requests', RequestController::class)->except(['create', 'edit', 'update', 'show']);
     Route::post('requests/{request}/approve', [RequestController::class, 'approve'])->name('requests.approve');
     Route::post('requests/{request}/reject', [RequestController::class, 'reject'])->name('requests.reject');
+    Route::resource('harvests', HarvestController::class)->except(['show']);
 });
 
 // Jika nanti role 'kepala', 'pegawai', dll tinggal tambahkan group serupa:
