@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ActivityCategoryController;
 // ...tambahkan Controller untuk role lain nanti
 
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::resource('users', UserController::class);
+    Route::resource('activity-categories', ActivityCategoryController::class)->except(['show']);
     Route::get('logs', [LogController::class, 'index'])->name('logs.index');
 
 });
