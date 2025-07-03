@@ -1,9 +1,9 @@
 <aside class="left-sidebar">
   <div>
     <div class="brand-logo d-flex align-items-center justify-content-between">
-      <a href="#" class="text-nowrap logo-img">
+      {{-- <a href="#" class="text-nowrap logo-img">
         <img src="{{ asset('assets/images/logos/logo.svg') }}" alt="Logo" />
-      </a>
+      </a> --}}
       <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
         <i class="ti ti-x fs-6"></i>
       </div>
@@ -32,7 +32,7 @@
         <li class="sidebar-item">
           <a class="sidebar-link" href="{{ route('admin.activity-categories.index') }}" aria-expanded="false">
             <i class="ti ti-category"></i>
-            <span class="hide-menu">Kategori Aktivitas</span>
+            <span class="hide-menu">Kategori Kegiatan</span>
           </a>
         </li>
         <li class="sidebar-item">

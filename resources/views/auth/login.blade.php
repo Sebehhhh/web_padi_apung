@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Login Sistem Informasi Akademik MAPK NU Haruyan</title>
+  <title>Login</title>
   <link rel="shortcut icon" type="image/png" href="{{ asset('assets/images/logos/favicon.png') }}" />
   <link rel="stylesheet" href="{{ asset('assets/css/styles.min.css') }}" />
 
@@ -24,10 +24,10 @@
               <div class="card-body">
                 <a href="/" class="text-nowrap logo-img text-center d-block py-3 w-100">
                   {{-- Ganti dengan logo sistem akademik Anda --}}
-                  <img src="{{ asset('assets/images/logos/logo.svg') }}" width="180"
-                    alt="Logo Sistem Informasi Akademik">
+                  {{-- <img src="{{ asset('assets/images/logos/logo.svg') }}" width="180"
+                    alt="Logo Sistem Informasi Akademik"> --}}
                 </a>
-                <p class="text-center">Sistem Informasi Akademik MAPK NU Haruyan</p>
+                <h1 class="text-center">Login</h1>
 
                 {{-- Form Login --}}
                 <form method="POST" action="{{ route('login') }}">
