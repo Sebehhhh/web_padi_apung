@@ -14,6 +14,6 @@ class ActivityCategory extends Model
     protected $fillable = [
         'name',
         'description',
-        'is_active',
+        // 'is_active',
     ];
 }

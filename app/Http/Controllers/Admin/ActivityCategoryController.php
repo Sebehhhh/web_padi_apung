@@ -23,7 +23,7 @@ class ActivityCategoryController extends Controller
         $validated = $request->validate([
             'name'        => 'required|string|max:50|unique:activity_categories,name',
             'description' => 'nullable|string|max:100',
-            'is_active'   => 'required|boolean',
+            // 'is_active'   => 'required|boolean',
         ]);
         $category = ActivityCategory::create($validated);
 
@@ -43,7 +43,7 @@ class ActivityCategoryController extends Controller
         $validated = $request->validate([
             'name'        => 'required|string|max:50|unique:activity_categories,name,' . $activity_category->id,
             'description' => 'nullable|string|max:100',
-            'is_active'   => 'required|boolean',
+            // 'is_active'   => 'required|boolean',
         ]);
         $activity_category->update($validated);
 

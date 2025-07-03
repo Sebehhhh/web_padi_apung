@@ -23,7 +23,7 @@ class CropTypeController extends Controller
         $validated = $request->validate([
             'name'        => 'required|string|max:50|unique:crop_types,name',
             'description' => 'nullable|string|max:100',
-            'is_active'   => 'required|boolean',
+            // 'is_active'   => 'required|boolean',
         ]);
         $crop = CropType::create($validated);
 
@@ -43,7 +43,7 @@ class CropTypeController extends Controller
         $validated = $request->validate([
             'name'        => 'required|string|max:50|unique:crop_types,name,' . $crop_type->id,
             'description' => 'nullable|string|max:100',
-            'is_active'   => 'required|boolean',
+            // 'is_active'   => 'required|boolean',
         ]);
         $crop_type->update($validated);
 

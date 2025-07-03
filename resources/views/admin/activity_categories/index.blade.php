@@ -18,7 +18,7 @@
                 <th>No</th>
                 <th>Nama Kategori</th>
                 <th>Deskripsi</th>
-                <th>Status</th>
+                {{-- <th>Status</th> --}}
                 <th>Aksi</th>
               </tr>
             </thead>
@@ -28,11 +28,11 @@
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $category->name }}</td>
                 <td>{{ $category->description ?? '-' }}</td>
-                <td>
+                {{-- <td>
                   <span class="badge bg-{{ $category->is_active ? 'success' : 'danger' }}">
                     {{ $category->is_active ? 'Aktif' : 'Nonaktif' }}
                   </span>
-                </td>
+                </td> --}}
                 <td>
                   <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
                     data-bs-target="#editCategoryModal{{ $category->id }}">Edit</button>
@@ -71,13 +71,13 @@
           <label>Deskripsi</label>
           <input type="text" name="description" class="form-control" maxlength="100">
         </div>
-        <div class="mb-3">
+        {{-- <div class="mb-3">
           <label>Status</label>
           <select name="is_active" class="form-control" required>
             <option value="1" selected>Aktif</option>
             <option value="0">Nonaktif</option>
           </select>
-        </div>
+        </div> --}}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -108,13 +108,13 @@
           <input type="text" name="description" class="form-control" value="{{ $category->description }}"
             maxlength="100">
         </div>
-        <div class="mb-3">
+        {{-- <div class="mb-3">
           <label>Status</label>
           <select name="is_active" class="form-control" required>
             <option value="1" {{ $category->is_active ? 'selected' : '' }}>Aktif</option>
             <option value="0" {{ !$category->is_active ? 'selected' : '' }}>Nonaktif</option>
           </select>
-        </div>
+        </div> --}}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
