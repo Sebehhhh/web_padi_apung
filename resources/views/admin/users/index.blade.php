@@ -7,8 +7,41 @@
       <div class="card-body">
         <div class="d-md-flex align-items-center justify-content-between">
           <h4 class="card-title">Manajemen User</h4>
-          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createUserModal">Tambah User</button>
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createUserModal">
+            Tambah User
+          </button>
         </div>
+
+        {{-- FILTER FORM --}}
+        <form method="GET" action="{{ route('admin.users.index') }}" class="row g-2 mb-3 align-items-end">
+          <div class="col-md-4">
+            <label class="form-label">Cari Nama / Email</label>
+            <input type="text" name="search" class="form-control" placeholder="Masukkan nama atau email"
+              value="{{ request('search') }}">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Filter Role</label>
+            <select name="role" class="form-select">
+              <option value="">Semua Role</option>
+              <option value="admin" {{ request('role')=='admin' ? 'selected' :'' }}>Admin</option>
+              <option value="kepala" {{ request('role')=='kepala' ? 'selected' :'' }}>Kepala</option>
+              <option value="pegawai" {{ request('role')=='pegawai' ? 'selected' :'' }}>Pegawai</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Filter Status</label>
+            <select name="status" class="form-select">
+              <option value="">Semua Status</option>
+              <option value="1" {{ request('status')=='1' ? 'selected' :'' }}>Active</option>
+              <option value="0" {{ request('status')=='0' ? 'selected' :'' }}>Inactive</option>
+            </select>
+          </div>
+          <div class="col-md-2 text-end">
+            <button type="submit" class="btn btn-secondary w-100 mt-2">Filter</button>
+          </div>
+        </form>
+        {{-- END FILTER --}}
+
         <div class="table-responsive mt-4">
           <table class="table table-bordered">
             <thead>
@@ -103,16 +136,6 @@
               </span>
             </td>
           </tr>
-          <tr>
-            {{-- <th>Foto Profil</th>
-            <td>
-              @if($user->photo_url)
-              <img src="{{ $user->photo_url }}" alt="Foto Profil" class="img-thumbnail" width="120">
-              @else
-              <span class="text-muted">-</span>
-              @endif
-            </td> --}}
-          </tr>
         </table>
       </div>
       <div class="modal-footer">
@@ -122,7 +145,7 @@
   </div>
 </div>
 
-<!-- Modal Edit -->
+<!-- Modal Edit User -->
 <div class="modal fade" id="editUserModal{{ $user->id }}" tabindex="-1">
   <div class="modal-dialog modal-lg">
     <form class="modal-content" method="POST" action="{{ route('admin.users.update', $user->id) }}">
@@ -160,9 +183,9 @@
         <div class="mb-3">
           <label>Role</label>
           <select name="role" class="form-control" required>
-            <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
-            <option value="kepala" {{ $user->role == 'kepala' ? 'selected' : '' }}>Kepala</option>
-            <option value="pegawai" {{ $user->role == 'pegawai' ? 'selected' : '' }}>Pegawai</option>
+            <option value="admin" {{ $user->role=='admin' ? 'selected':'' }}>Admin</option>
+            <option value="kepala" {{ $user->role=='kepala' ? 'selected':'' }}>Kepala</option>
+            <option value="pegawai" {{ $user->role=='pegawai' ? 'selected':'' }}>Pegawai</option>
           </select>
         </div>
         <div class="mb-3">
@@ -172,10 +195,6 @@
             <option value="0" {{ !$user->is_active ? 'selected' : '' }}>Inactive</option>
           </select>
         </div>
-        {{-- <div class="mb-3">
-          <label>Foto Profil (URL)</label>
-          <input type="text" name="photo_url" class="form-control" value="{{ $user->photo_url }}">
-        </div> --}}
         <div class="mb-3">
           <label>Password (isi jika ingin mengubah)</label>
           <input type="password" name="password" class="form-control" autocomplete="new-password">
@@ -192,7 +211,7 @@
 </div>
 @endforeach
 
-<!-- Modal Tambah -->
+<!-- Modal Tambah User -->
 <div class="modal fade" id="createUserModal" tabindex="-1">
   <div class="modal-dialog modal-lg">
     <form class="modal-content" method="POST" action="{{ route('admin.users.store') }}">
@@ -241,10 +260,6 @@
             <option value="0">Inactive</option>
           </select>
         </div>
-        {{-- <div class="mb-3">
-          <label>Foto Profil (URL)</label>
-          <input type="text" name="photo_url" class="form-control">
-        </div> --}}
         <div class="mb-3">
           <label>Password</label>
           <input type="password" name="password" class="form-control" required autocomplete="new-password">

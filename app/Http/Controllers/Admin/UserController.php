@@ -12,9 +12,32 @@ use Illuminate\Support\Facades\Auth;
 class UserController extends Controller
 {
     // Tampilkan semua user
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::paginate(10);
+        $query = User::query();
+
+        // Filter berdasarkan role jika ada
+        if ($request->filled('role')) {
+            $query->where('role', $request->role);
+        }
+
+        // Filter berdasarkan status aktif jika ada
+        if ($request->filled('is_active')) {
+            $query->where('is_active', $request->is_active);
+        }
+
+        // Filter pencarian nama/email/nip_nik jika ada
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('nip_nik', 'like', "%{$search}%");
+            });
+        }
+
+        $users = $query->paginate(10)->appends($request->except('page'));
+
         return view('admin.users.index', compact('users'));
     }
 

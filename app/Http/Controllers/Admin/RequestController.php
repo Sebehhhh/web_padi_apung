@@ -12,11 +12,35 @@ use App\Helpers\ActivityLogger;
 
 class RequestController extends Controller
 {
-    // Tampilkan semua permintaan
-    public function index()
+    // Tampilkan semua permintaan dengan filter
+    public function index(Request $request)
     {
-        $requests = RequestModel::with(['user', 'items', 'approver'])->orderByDesc('created_at')->paginate(10);
-        return view('admin.requests.index', compact('requests'));
+        $query = RequestModel::with(['user', 'items', 'approver']);
+
+        // Filter berdasarkan status
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        // Filter berdasarkan tanggal permintaan (range)
+        if ($request->filled('start_date')) {
+            $query->whereDate('request_date', '>=', $request->input('start_date'));
+        }
+        if ($request->filled('end_date')) {
+            $query->whereDate('request_date', '<=', $request->input('end_date'));
+        }
+
+        // Filter berdasarkan user
+        if ($request->filled('user_id')) {
+            $query->where('user_id', $request->input('user_id'));
+        }
+
+        $requests = $query->orderByDesc('created_at')->paginate(10)->appends($request->except('page'));
+
+        // Ambil semua user untuk dropdown filter
+        $users = \App\Models\User::orderBy('name')->get();
+
+        return view('admin.requests.index', compact('requests', 'users'));
     }
 
     // Simpan permintaan baru

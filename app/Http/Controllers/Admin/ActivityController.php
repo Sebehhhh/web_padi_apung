@@ -12,10 +12,36 @@ use App\Helpers\ActivityLogger;
 class ActivityController extends Controller
 {
     // Tampilkan semua kegiatan
-    public function index()
+    public function index(Request $request)
     {
-        $activities = Activity::with(['category', 'photos'])->orderByDesc('activity_date')->paginate(10);
+        $query = Activity::with(['category', 'photos']);
+
+        // Filter by category
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        // Filter by status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Filter by date range
+        if ($request->filled('start_date')) {
+            $query->whereDate('activity_date', '>=', $request->start_date);
+        }
+        if ($request->filled('end_date')) {
+            $query->whereDate('activity_date', '<=', $request->end_date);
+        }
+
+        // Filter by keyword in description
+        if ($request->filled('keyword')) {
+            $query->where('description', 'like', '%' . $request->keyword . '%');
+        }
+
+        $activities = $query->orderByDesc('activity_date')->paginate(10)->appends($request->except('page'));
         $categories = ActivityCategory::where('is_active', 1)->orderBy('name')->get();
+
         return view('admin.activities.index', compact('activities', 'categories'));
     }
 

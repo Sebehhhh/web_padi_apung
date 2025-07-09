@@ -11,6 +11,44 @@
             Tambah Permintaan
           </button>
         </div>
+
+        {{-- Filter --}}
+        <form method="GET" action="{{ route('admin.requests.index') }}" class="row g-3 align-items-end mt-4 mb-2">
+          <div class="col-md-3">
+            <label for="filter_status" class="form-label">Status</label>
+            <select name="status" id="filter_status" class="form-select">
+              <option value="">Semua</option>
+              <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending</option>
+              <option value="Approved" {{ request('status') == 'Approved' ? 'selected' : '' }}>Approved</option>
+              <option value="Rejected" {{ request('status') == 'Rejected' ? 'selected' : '' }}>Rejected</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label for="filter_user" class="form-label">Pemohon</label>
+            <select name="user_id" id="filter_user" class="form-select">
+              <option value="">Semua</option>
+              @foreach($users as $user)
+                <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : '' }}>
+                  {{ $user->name }}
+                </option>
+              @endforeach
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Periode Tanggal Permintaan</label>
+            <div class="input-group">
+              <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}">
+              <span class="input-group-text">s/d</span>
+              <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <button type="submit" class="btn btn-primary">Filter</button>
+            <a href="{{ route('admin.requests.index') }}" class="btn btn-secondary">Reset</a>
+          </div>
+        </form>
+        {{-- End Filter --}}
+
         @if ($errors->any())
         <div class="alert alert-danger mt-3">
           <ul class="mb-0">
@@ -64,7 +102,7 @@
               @endforelse
             </tbody>
           </table>
-          {{ $requests->links('pagination::bootstrap-4') }}
+          {{ $requests->appends(request()->query())->links('pagination::bootstrap-4') }}
         </div>
       </div>
     </div>

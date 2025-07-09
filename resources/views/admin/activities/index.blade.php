@@ -11,6 +11,44 @@
             Tambah Kegiatan
           </button>
         </div>
+
+        {{-- FILTER START --}}
+        <form method="GET" action="{{ route('admin.activities.index') }}" class="row g-2 align-items-end mt-3 mb-2">
+          <div class="col-md-3">
+            <label class="form-label mb-1">Tanggal Mulai</label>
+            <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label mb-1">Tanggal Selesai</label>
+            <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label mb-1">Kategori</label>
+            <select name="category_id" class="form-select">
+              <option value="">Semua Kategori</option>
+              @foreach($categories as $cat)
+                <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>
+                  {{ $cat->name }}
+                </option>
+              @endforeach
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label class="form-label mb-1">Status</label>
+            <select name="status" class="form-select">
+              <option value="">Semua Status</option>
+              <option value="Draft" {{ request('status') == 'Draft' ? 'selected' : '' }}>Draft</option>
+              <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending</option>
+              <option value="Selesai" {{ request('status') == 'Selesai' ? 'selected' : '' }}>Selesai</option>
+              <option value="Dibatalkan" {{ request('status') == 'Dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <button type="submit" class="btn btn-outline-primary w-100">Filter</button>
+          </div>
+        </form>
+        {{-- FILTER END --}}
+
         <div class="table-responsive mt-4">
           <table class="table table-bordered align-middle">
             <thead>
@@ -27,7 +65,7 @@
             <tbody>
               @forelse($activities as $activity)
               <tr>
-                <td>{{ $loop->iteration }}</td>
+                <td>{{ $loop->iteration + ($activities->currentPage() - 1) * $activities->perPage() }}</td>
                 <td>{{ \Carbon\Carbon::parse($activity->activity_date)->format('d M Y') }}</td>
                 <td>{{ $activity->category->name ?? '-' }}</td>
                 <td>{{ Str::limit($activity->description, 50) }}</td>
@@ -65,7 +103,7 @@
               @endforelse
             </tbody>
           </table>
-          {{ $activities->links('pagination::bootstrap-4') }}
+          {{ $activities->appends(request()->query())->links('pagination::bootstrap-4') }}
         </div>
       </div>
     </div>
