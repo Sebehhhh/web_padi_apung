@@ -51,6 +51,18 @@
                 </form>
                 {{-- END FILTER --}}
 
+                {{-- EXPORT PDF --}}
+                <form method="GET" action="{{ route('kepala.schedules.export') }}" target="_blank" class="mb-4">
+                    <input type="hidden" name="start_date" value="{{ request('start_date') }}">
+                    <input type="hidden" name="end_date" value="{{ request('end_date') }}">
+                    <input type="hidden" name="user_id" value="{{ request('user_id') }}">
+                    <input type="hidden" name="division" value="{{ request('division') }}">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-file-pdf"></i> Export PDF
+                    </button>
+                </form>
+                {{-- END EXPORT PDF --}}
+
                 <div class="table-responsive">
                     <table class="table table-bordered align-middle">
                         <thead>

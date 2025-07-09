@@ -50,6 +50,37 @@ class HarvestController extends Controller
         return view('kepala.harvests.index', compact('harvests', 'cropTypes'));
     }
 
+    public function export(Request $request)
+    {
+        $query = Harvest::with(['user', 'cropType']);
+
+        // filter rentang tanggal panen
+        if ($request->filled('date_start')) {
+            $query->whereDate('harvest_date', '>=', $request->date_start);
+        }
+        if ($request->filled('date_end')) {
+            $query->whereDate('harvest_date', '<=', $request->date_end);
+        }
+
+        // filter jenis tanaman
+        if ($request->filled('crop_type_id')) {
+            $query->where('crop_type_id', $request->crop_type_id);
+        }
+
+        // filter kualitas
+        if ($request->filled('quality')) {
+            $query->where('quality', $request->quality);
+        }
+
+        $harvests = $query->orderByDesc('harvest_date')->get();
+        $filename = 'hasil-panen-' . now()->format('Ymd_His') . '.pdf';
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('kepala.harvests.export_pdf', compact('harvests'))
+            ->setPaper('a4', 'potrait');
+
+        return $pdf->download($filename);
+    }
+
     // -----------------------
     // Method lain tidak digunakan
     // -----------------------

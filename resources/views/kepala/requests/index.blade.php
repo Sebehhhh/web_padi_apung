@@ -12,7 +12,7 @@
                     <h4 class="card-title">Permintaan Barang/Bahan</h4>
                 </div>
 
-                {{-- FILTER --}}
+                 {{-- FILTER --}}
                 <form method="GET" action="{{ route('kepala.requests.index') }}" class="row g-3 align-items-end mb-4">
                     <div class="col-md-3">
                         <label class="form-label">Status</label>
@@ -48,6 +48,19 @@
                     <div class="col-md-2 text-end">
                         <button type="submit" class="btn btn-primary w-100">Filter</button>
                         <a href="{{ route('kepala.requests.index') }}" class="btn btn-secondary w-100 mt-1">Reset</a>
+                        {{-- Tombol Export --}}
+                        <a 
+                            href="{{ route('kepala.requests.export', array_filter([
+                                'status' => request('status'),
+                                'user_id' => request('user_id'),
+                                'start_date' => request('start_date'),
+                                'end_date' => request('end_date'),
+                            ])) }}" 
+                            class="btn btn-success w-100 mt-1"
+                            target="_blank"
+                        >
+                            Export
+                        </a>
                     </div>
                 </form>
                 {{-- END FILTER --}}

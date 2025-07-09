@@ -62,6 +62,44 @@ class ScheduleController extends Controller
         return view('kepala.schedules.index', compact('schedules', 'users', 'divisions'));
     }
 
+     public function export(Request $request)
+    {
+        $query = Schedule::with('user')
+            ->orderByDesc('schedule_date')
+            ->orderBy('start_time');
+
+        // Filter: tanggal mulai
+        if ($request->filled('start_date')) {
+            $query->whereDate('schedule_date', '>=', $request->start_date);
+        }
+
+        // Filter: tanggal akhir
+        if ($request->filled('end_date')) {
+            $query->whereDate('schedule_date', '<=', $request->end_date);
+        }
+
+        // Filter: pegawai tertentu
+        if ($request->filled('user_id')) {
+            $query->where('user_id', $request->user_id);
+        }
+
+        // Filter: berdasarkan divisi
+        if ($request->filled('division')) {
+            $query->whereHas('user', function ($q) use ($request) {
+                $q->where('division', $request->division);
+            });
+        }
+
+        $schedules = $query->get();
+        $filename = 'jadwal_kerja_' . now()->format('Ymd_His') . '.pdf';
+
+        // generate PDF dari view khusus
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('kepala.schedules.export_pdf', compact('schedules'))
+            ->setPaper('a4', 'potrait');
+
+        return $pdf->download($filename);
+    }
+
     /**
      * Create not available for Kepala.
      */

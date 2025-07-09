@@ -62,10 +62,10 @@ Route::middleware(['auth', 'role:kepala'])
         Route::resource('users', KepalaUserController::class)->except('show');
 
         // Modul Permintaan (ringkasan & histori)
-        Route::resource('requests',   KepalaRequestController::class)->only(['index', 'show']);
+        Route::resource('requests',   KepalaRequestController::class)->except('show');
 
         // Modul Hasil Panen (tim)
-        Route::resource('harvests',   KepalaHarvestController::class)->only(['index', 'show']);
+        Route::resource('harvests',   KepalaHarvestController::class)->except('show');
 
         // Modul Jadwal Kerja Harian (read-only)
         Route::resource('schedules',  KepalaScheduleController::class)->only(['index']);
@@ -76,4 +76,15 @@ Route::middleware(['auth', 'role:kepala'])
         // Modul Ekspor Data Pegawai (cetak users)
         Route::get('users/export', [KepalaUserController::class, 'export'])
             ->name('users.export');
+        // Modul Ekspor Permintaan Barang/Bahan (cetak requests)
+        Route::get('requests/export', [KepalaRequestController::class, 'export'])
+            ->name('requests.export');
+
+        // Ekspor Hasil Panen (cetak harvests)
+        Route::get('harvests/export', [KepalaHarvestController::class, 'export'])
+            ->name('harvests.export');
+
+        // Ekspor Jadwal Kerja Harian (cetak schedules)
+        Route::get('schedules/export', [KepalaScheduleController::class, 'export'])
+            ->name('schedules.export');
     });

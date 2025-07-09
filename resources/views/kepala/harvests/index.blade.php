@@ -13,7 +13,7 @@
           <h4 class="card-title">Hasil Panen</h4>
         </div>
 
-        {{-- FILTER --}}
+         {{-- FILTER --}}
         <form method="GET"
               action="{{ route('kepala.harvests.index') }}"
               class="row g-3 align-items-end mb-4">
@@ -57,6 +57,20 @@
           </div>
         </form>
         {{-- END FILTER --}}
+
+        {{-- EXPORT PDF --}}
+        <form method="GET"
+              action="{{ route('kepala.harvests.export') }}"
+              target="_blank"
+              class="mb-4">
+          <input type="hidden" name="date_start" value="{{ request('date_start') }}">
+          <input type="hidden" name="date_end" value="{{ request('date_end') }}">
+          <input type="hidden" name="crop_type_id" value="{{ request('crop_type_id') }}">
+          <input type="hidden" name="quality" value="{{ request('quality') }}">
+          <button type="submit" class="btn btn-success">
+            <i class="fas fa-file-pdf"></i> Export PDF
+          </button>
+        </form>
 
         <div class="table-responsive">
           <table class="table table-bordered align-middle">
