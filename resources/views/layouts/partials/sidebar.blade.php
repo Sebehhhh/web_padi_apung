@@ -91,6 +91,13 @@
             <span class="hide-menu">Riwayat Aktivitas</span>
           </a>
         </li>
+        <!-- Jadwal Kerja Harian -->
+        <li class="sidebar-item {{ request()->routeIs('admin.schedules.*') ? 'active' : '' }}">
+          <a class="sidebar-link" href="{{ route('admin.schedules.index') }}">
+            <i class="ti ti-clock"></i>
+            <span class="hide-menu">Jadwal Kerja</span>
+          </a>
+        </li>
 
         @elseif(auth()->user()->role === 'kepala')
         <style>

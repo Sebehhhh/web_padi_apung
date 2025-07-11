@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\ActivityPhotoController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\AuthController;
@@ -11,7 +10,7 @@ use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\ActivityPhotoController as AdminActivityPhotoController;
 use App\Http\Controllers\Admin\HarvestController;
 use App\Http\Controllers\Admin\RequestController;
-
+use App\Http\Controllers\Admin\ScheduleController;
 // Controllers untuk role Kepala
 use App\Http\Controllers\Kepala\DashboardController   as KepalaDashboardController;
 use App\Http\Controllers\Kepala\ActivityController    as KepalaActivityController;
@@ -19,7 +18,6 @@ use App\Http\Controllers\Kepala\UserController        as KepalaUserController;
 use App\Http\Controllers\Kepala\RequestController     as KepalaRequestController;
 use App\Http\Controllers\Kepala\HarvestController     as KepalaHarvestController;
 use App\Http\Controllers\Kepala\ScheduleController    as KepalaScheduleController;
-use App\Http\Controllers\Kepala\ExportController      as KepalaExportController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -45,6 +43,7 @@ Route::middleware(['auth', 'role:admin'])
         Route::post('requests/{request}/approve', [RequestController::class, 'approve'])->name('requests.approve');
         Route::post('requests/{request}/reject',  [RequestController::class, 'reject'])->name('requests.reject');
         Route::resource('harvests',            HarvestController::class)->except('show');
+        Route::resource('schedules', ScheduleController::class)->except('show');
     });
 
 // Kepala only
