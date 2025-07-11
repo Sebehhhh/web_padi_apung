@@ -156,6 +156,55 @@
           </a>
         </li>
 
+        @elseif(auth()->user()->role === 'pegawai')
+        <style>
+          .sidebar-link:hover,
+          .sidebar-item.active>.sidebar-link {
+            background-color: #28a745 !important;
+            color: #fff !important;
+          }
+        </style>
+
+        <!-- Dashboard Pegawai -->
+        <li class="sidebar-item {{ request()->routeIs('pegawai.dashboard') ? 'active' : '' }}">
+          <a class="sidebar-link" href="{{ route('pegawai.dashboard') }}">
+            <i class="ti ti-atom"></i>
+            <span class="hide-menu">Dashboard</span>
+          </a>
+        </li>
+
+        <!-- Data Diri -->
+        <li class="sidebar-item {{ request()->routeIs('pegawai.users.*') ? 'active' : '' }}">
+          <a class="sidebar-link" href="{{ route('pegawai.users.show', auth()->user()->id) }}">
+            <i class="ti ti-user"></i>
+            <span class="hide-menu">Data Diri</span>
+          </a>
+        </li>
+
+        <!-- Permintaan Barang -->
+        <li class="sidebar-item {{ request()->routeIs('pegawai.requests.*') ? 'active' : '' }}">
+          <a class="sidebar-link" href="{{ route('pegawai.requests.index') }}">
+            <i class="ti ti-shopping-cart"></i>
+            <span class="hide-menu">Permintaan Barang</span>
+          </a>
+        </li>
+
+        <!-- Pencatatan Panen -->
+        <li class="sidebar-item {{ request()->routeIs('pegawai.harvests.*') ? 'active' : '' }}">
+          <a class="sidebar-link" href="{{ route('pegawai.harvests.index') }}">
+            <i class="ti ti-basket"></i>
+            <span class="hide-menu">Pencatatan Panen</span>
+          </a>
+        </li>
+
+        <!-- Jadwal Kerja -->
+        <li class="sidebar-item {{ request()->routeIs('pegawai.schedules.*') ? 'active' : '' }}">
+          <a class="sidebar-link" href="{{ route('pegawai.schedules.index') }}">
+            <i class="ti ti-clock"></i>
+            <span class="hide-menu">Jadwal Kerja</span>
+          </a>
+        </li>
+
         @endif
 
       </ul>
